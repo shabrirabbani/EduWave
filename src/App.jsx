@@ -8,11 +8,31 @@ import ListUserAdmin from './pages/DashboardAdmin/ListUserAdmin';
 import TemplateSekolah from './TemplateSekolah';
 import DashboardSekolah from './pages/DashboardSekolah/DashboardSekolah';
 import DaftarSiswa from './pages/DashboardSekolah/DaftarSiswa';
+import RegisterSiswa from './pages/DashboardSekolah/RegisterSiswa';
+import Golongan from './pages/DashboardSekolah/Golongan';
+import TemplateLP from './TemplateLP';
+import Pembayaran from './pages/LandingPage/Pembayaran';
+import Login from './pages/Login/Login';
+import Gabung from './pages/LandingPage/Gabung';
 
 const route  = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />
+    element: <TemplateLP />,
+    children: [
+      {
+        path: '/',
+        element: <LandingPage/>
+      },
+      {
+        path: 'pembayaran',
+        element: <Pembayaran/>
+      },
+      {
+        path: 'gabung',
+        element: <Gabung/>
+      }
+    ]
   },
   {
     path: '/dashboardadmin',
@@ -43,8 +63,20 @@ const route  = createBrowserRouter([
       {
         path: 'daftarsiswa',
         element: <DaftarSiswa/>
+      },
+      {
+        path: 'register',
+        element: <RegisterSiswa/>
+      },
+      {
+        path: 'golongan',
+        element: <Golongan/>
       }
     ]
+  },
+  {
+    path: '/login',
+    element: <Login/>
   }
 ])
 

@@ -1,7 +1,15 @@
 import React from 'react'
 
+import Hero from './components/Hero';
+import Gallery from './components/Gallery';
+import Comments from './components/Comments';
+
 export default function LandingPage() {
   return (
-    <div>LandingPage</div>
-  )
+    <div>
+        <Hero />
+        <Comments />
+        <Gallery />
+    </div>
+  );
 }
