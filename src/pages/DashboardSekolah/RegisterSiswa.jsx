@@ -1,9 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
+
+const dataGolongan = [
+  {id: 1, nama: "Golongan 1", jumlah: "Rp.1.500.000"},
+  {id: 2, nama: "Golongan 2", jumlah: "Rp.2.000.000"},
+  {id: 3, nama: "Golongan 3", jumlah: "Rp.2.500.000"},
+  {id: 4, nama: "Golongan 4", jumlah: "Rp.3.000.000"},
+];
 
 export default function RegisterSiswa() {
+
+  const [selectedGolongan, setSelectedGolongan] = useState("");
+  const [tagihan, setTagihan] = useState("");
+
+  const handleGolonganChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedGolongan(selectedValue);
+
+    const selectedGolonganData = dataGolongan.find(
+      (golongan) => golongan.nama === selectedValue
+    );
+    setTagihan(selectedGolonganData ? selectedGolonganData.jumlah : "");
+  };
+
   return (
-    <div className='ms-5'>
-      <h1 className="text-lg font-semibold">Register Siswa</h1>
+    <div className="ms-5">
+      <h1 className="text-2xl font-semibold">Register Siswa</h1>
       <div className="mt-5">
         <form class=" mx-auto">
           <div className="grid grid-cols-2 gap-6 space-x-6">
@@ -99,42 +120,50 @@ export default function RegisterSiswa() {
                 </label>
               </div>
             </div>
-            <div className='space-y-6 max-w-md bg-gray-200 p-5 rounded-lg shadow-lg'>
+            <div className="space-y-6 max-w-md bg-gray-200 border border-green-400 p-5 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold">Uang Pembayaran</h3>
               <div className="">
                 <label
                   for="golongan"
-                  class="block mb-2 text-sm font-medium text-gray-90">
+                  className="block mb-2 text-sm font-medium text-gray-90">
                   Pilih Golongan
                 </label>
                 <select
                   id="golongan"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
-                  <option selected>Pilih Golongan</option>
-                  <option value="A">Gologan A</option>
+                  value={selectedGolongan}
+                  onChange={handleGolonganChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
+                  <option value="">Pilih Golongan</option>
+                  {dataGolongan.map((golongan) => (
+                    <option key={golongan.id} value={golongan.nama}>
+                      {golongan.nama}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
                 <label
-                  for="first_name"
-                  class="block mb-2 text-sm font-medium text-gray-900 ">
+                  htmlFor="tagihan"
+                  className="block mb-2 text-sm font-medium text-gray-900 ">
                   Tagihan
                 </label>
                 <input
                   type="text"
-                  id="first_name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
-                  placeholder="Rp.200.000"
+                  id="tagihan"
+                  value={tagihan}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 "
+                  disabled
                 />
               </div>
               <div>
                 <label
                   for="first_name"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Status Pembayaran
                 </label>
                 <select
                   id="status_pembayaran"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
                   <option selected>Belum Bayar</option>
                   <option value="Lunas">Lunas</option>
                 </select>
@@ -143,7 +172,7 @@ export default function RegisterSiswa() {
           </div>
           <button
             type="submit"
-            class="text-white bg-primary hover:bg-green-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+            className="text-white bg-primary hover:bg-green-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
             Submit
           </button>
         </form>

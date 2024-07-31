@@ -1,5 +1,5 @@
 import React from 'react'
-import CardInformation from './components/CardInformation'
+import CardInformation from '../../components/CardInformation'
 
 export default function DashboardAdmin() {
   return (

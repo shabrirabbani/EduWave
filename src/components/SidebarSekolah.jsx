@@ -12,13 +12,28 @@ import React from "react";
 import {Link, NavLink} from "react-router-dom";
 import logo from "../assets/images/Logo.svg";
 import logo2 from "../assets/react.svg";
+import Swal from "sweetalert2";
 
-export default function SidebarSekolah({
-  isMinimized,
-  isOpen,
-  toggleSidebar,
-  toggleSidebarOpen,
-}) {
+export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleSidebarOpen,}) {
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Logout",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //localStorage.clear();
+        window.location.href = "/";
+      }
+    });
+  }
+  
   return (
     <div>
       {/* Mobile hamburger menu button */}
@@ -106,12 +121,12 @@ export default function SidebarSekolah({
               </NavLink>
             </li>
             <li>
-              <Link
-                to={"/"}
+              <button
+                onClick={handleLogout}
                 className="flex items-center p-2 rounded-lg hover:text-primary group transition-all duration-300 ease-in-out">
                 <IconLogout size={22} />
                 {!isMinimized && <span className="ms-3">Logout</span>}
-              </Link>
+              </button>
             </li>
           </ul>
           <div className="mt-auto">

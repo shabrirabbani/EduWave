@@ -14,6 +14,8 @@ import TemplateLP from './TemplateLP';
 import Pembayaran from './pages/LandingPage/Pembayaran';
 import Login from './pages/Login/Login';
 import Gabung from './pages/LandingPage/Gabung';
+import AboutUs from './pages/LandingPage/AboutUs';
+import EditSiswa from './pages/DashboardSekolah/EditSiswa';
 
 const route  = createBrowserRouter([
   {
@@ -31,6 +33,10 @@ const route  = createBrowserRouter([
       {
         path: 'gabung',
         element: <Gabung/>
+      },
+      {
+        path: 'aboutus',
+        element: <AboutUs/>
       }
     ]
   },
@@ -71,6 +77,10 @@ const route  = createBrowserRouter([
       {
         path: 'golongan',
         element: <Golongan/>
+      },
+      {
+        path: 'edit/:id',
+        element: <EditSiswa/>
       }
     ]
   },

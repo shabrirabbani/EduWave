@@ -14,7 +14,7 @@ export default function Login() {
           <p className="text-gray-300 text-center text-sm">
             Jika belum ada akun
           </p>
-          <Link className='text-primary text-center underline hover:text-green-700'>Daftar disini</Link>
+          <Link to={'/gabung'} className='text-primary text-center underline hover:text-green-700'>Daftar disini</Link>
         </div>
         <div className="text-white ps-10">
           <h1 className="text-3xl font-semibold text-center">Login</h1>

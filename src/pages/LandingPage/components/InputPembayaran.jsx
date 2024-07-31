@@ -23,7 +23,7 @@ export default function InputPembayaran() {
 
   return (
     <div className="pb-10">
-      <form className="grid grid-cols-2 gap-5">
+      <form className="grid grid-cols-1 md:grid-cols-2 p-10 md:p-0 gap-5">
         <div className="relative w-full">
           <input
             type="text"

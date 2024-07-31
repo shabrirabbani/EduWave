@@ -62,11 +62,11 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to={'aboutus'}
                   className="block py-2 px-3 text-white rounded hover:bg-primary md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0">
                   Tentang Kami
-                </a>
+                </Link>
               </li>
               <div>
                 <Link to={'/login'}>
