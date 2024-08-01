@@ -8,6 +8,15 @@ const dataGolongan = [
 ];
 
 export default function RegisterSiswa() {
+  const [form, setForm] = useState({
+    nama: "",
+    nis: "",
+    email: "",
+    noHp: "",
+    noHpOrtu: "",
+    alamat: "",
+    golonganId: "",
+  });
   const [selectedGolongan, setSelectedGolongan] = useState("");
   const [tagihan, setTagihan] = useState("");
 
@@ -19,10 +28,20 @@ export default function RegisterSiswa() {
       (golongan) => golongan.nama === selectedValue
     );
     setTagihan(selectedGolonganData ? selectedGolonganData.jumlah : "");
+    setForm({
+      ...form,
+      golonganId: selectedGolonganData ? selectedGolonganData.id : "",
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(form);
     console.log("Data disimpan");
   };
 
@@ -35,8 +54,10 @@ export default function RegisterSiswa() {
             <div className="">
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.nama}
                   type="text"
-                  name="namasiswa"
+                  name="nama"
                   id="namasiswa"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -51,6 +72,8 @@ export default function RegisterSiswa() {
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.nis}
                   type="text"
                   name="nis"
                   id="nis"
@@ -67,6 +90,8 @@ export default function RegisterSiswa() {
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.email}
                   type="email"
                   name="email"
                   id="email"
@@ -83,8 +108,10 @@ export default function RegisterSiswa() {
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.noHp}
                   type="text"
-                  name="nohpsiswa"
+                  name="noHp"
                   id="nohpsiswa"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -99,8 +126,10 @@ export default function RegisterSiswa() {
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.noHpOrtu}
                   type="text"
-                  name="nohportu"
+                  name="noHpOrtu"
                   id="nohportu"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -115,6 +144,8 @@ export default function RegisterSiswa() {
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.alamat}
                   type="text"
                   name="alamat"
                   id="alamat"
