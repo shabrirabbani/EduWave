@@ -1,23 +1,20 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import axiosInstance from "../api/axiosInstance";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../api/axiosinstance";
 
 // Thunks untuk melakukan aksi async
-export const fetchAllSiswa = createAsyncThunk(
-  "siswa/fetchAll",
-  async (username) => {
-    const response = await axiosInstance.get(`/sekolah/${username}/siswa`);
-    return response.data;
-  }
-);
+export const fetchAllSiswa = createAsyncThunk("siswa/fetchAll", async () => {
+  const response = await axiosInstance.get(`/siswa`);
+  return response.data.data;
+});
 
 export const addSiswa = createAsyncThunk("siswa/add", async (siswaData) => {
   const response = await axiosInstance.post(`/siswa`, siswaData);
-  return response.data;
+  return response.data.data;
 });
 
 export const updateSiswa = createAsyncThunk(
   "siswa/update",
-  async ({id, siswaData}) => {
+  async ({ id, siswaData }) => {
     const response = await axiosInstance.put(`/siswa/${id}`, siswaData);
     return response.data;
   }
@@ -27,6 +24,15 @@ export const deleteSiswa = createAsyncThunk("siswa/delete", async (id) => {
   await axiosInstance.delete(`/siswa/${id}`);
   return id;
 });
+
+export const updateStatus = createAsyncThunk(
+  "siswa/updateStatus",
+  async (listSiswaId) => {
+    await axiosInstance.post("/siswa/reset", {
+      siswaId: listSiswaId,
+    });
+  }
+);
 
 // Slice untuk siswa
 const siswaSlice = createSlice({
@@ -63,6 +69,18 @@ const siswaSlice = createSlice({
       })
       .addCase(deleteSiswa.fulfilled, (state, action) => {
         state.list = state.list.filter((siswa) => siswa.id !== action.payload);
+      })
+      .addCase(updateStatus.fulfilled, (state, action) => {
+        // Kamu bisa memperbarui status siswa di sini jika perlu.
+        // Misalnya, jika response.data mengandung daftar siswa yang telah diupdate:
+        action.payload.forEach((updatedSiswa) => {
+          const index = state.list.findIndex(
+            (siswa) => siswa.id === updatedSiswa.id
+          );
+          if (index !== -1) {
+            state.list[index] = updatedSiswa;
+          }
+        });
       });
   },
 });

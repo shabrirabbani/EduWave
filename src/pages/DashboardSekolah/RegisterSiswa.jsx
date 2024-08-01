@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
 
 const dataGolongan = [
-  {id: 1, nama: "Golongan 1", jumlah: "Rp.1.500.000"},
-  {id: 2, nama: "Golongan 2", jumlah: "Rp.2.000.000"},
-  {id: 3, nama: "Golongan 3", jumlah: "Rp.2.500.000"},
-  {id: 4, nama: "Golongan 4", jumlah: "Rp.3.000.000"},
+  { id: 1, nama: "Golongan 1", jumlah: "Rp.1.500.000" },
+  { id: 2, nama: "Golongan 2", jumlah: "Rp.2.000.000" },
+  { id: 3, nama: "Golongan 3", jumlah: "Rp.2.500.000" },
+  { id: 4, nama: "Golongan 4", jumlah: "Rp.3.000.000" },
 ];
 
 export default function RegisterSiswa() {
-
   const [selectedGolongan, setSelectedGolongan] = useState("");
   const [tagihan, setTagihan] = useState("");
 
@@ -22,11 +21,16 @@ export default function RegisterSiswa() {
     setTagihan(selectedGolonganData ? selectedGolonganData.jumlah : "");
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Data disimpan");
+  };
+
   return (
     <div className="ms-5">
       <h1 className="text-2xl font-semibold">Register Siswa</h1>
       <div className="mt-5">
-        <form class=" mx-auto">
+        <form onSubmit={handleSubmit} class=" mx-auto">
           <div className="grid grid-cols-2 gap-6 space-x-6">
             <div className="">
               <div class="relative z-0 w-full mb-5 group">
@@ -40,7 +44,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="namasiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Nama Siswa
                 </label>
               </div>
@@ -55,7 +60,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="nis"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Nomor Induk Siswa (NIS)
                 </label>
               </div>
@@ -70,7 +76,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="email"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Email Siswa
                 </label>
               </div>
@@ -85,7 +92,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="nohpsiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Nomor HP Siswa
                 </label>
               </div>
@@ -100,7 +108,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="nohportu"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Nomor HP Orang Tua
                 </label>
               </div>
@@ -115,7 +124,8 @@ export default function RegisterSiswa() {
                 />
                 <label
                   for="alamat"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
                   Alamat
                 </label>
               </div>
@@ -125,14 +135,16 @@ export default function RegisterSiswa() {
               <div className="">
                 <label
                   for="golongan"
-                  className="block mb-2 text-sm font-medium text-gray-90">
+                  className="block mb-2 text-sm font-medium text-gray-90"
+                >
                   Pilih Golongan
                 </label>
                 <select
                   id="golongan"
                   value={selectedGolongan}
                   onChange={handleGolonganChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
+                >
                   <option value="">Pilih Golongan</option>
                   {dataGolongan.map((golongan) => (
                     <option key={golongan.id} value={golongan.nama}>
@@ -144,7 +156,8 @@ export default function RegisterSiswa() {
               <div>
                 <label
                   htmlFor="tagihan"
-                  className="block mb-2 text-sm font-medium text-gray-900 ">
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
                   Tagihan
                 </label>
                 <input
@@ -158,12 +171,14 @@ export default function RegisterSiswa() {
               <div>
                 <label
                   for="first_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Status Pembayaran
                 </label>
                 <select
                   id="status_pembayaran"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
+                >
                   <option selected>Belum Bayar</option>
                   <option value="Lunas">Lunas</option>
                 </select>
@@ -172,7 +187,8 @@ export default function RegisterSiswa() {
           </div>
           <button
             type="submit"
-            className="text-white bg-primary hover:bg-green-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+            className="text-white bg-primary hover:bg-green-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
             Submit
           </button>
         </form>
