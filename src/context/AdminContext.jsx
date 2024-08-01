@@ -42,19 +42,37 @@ export const SekolahProvider = ({children}) => {
      }
    };
 
-   const updateSekolah = async (sekolahData) => {
+   const updateSekolah = async (formData) => {
      setStatus("loading");
-     console.log("Mengirim data ke endpoint /sekolah:", sekolahData);
      try {
-       console.log("FormData yang diterima di context:", sekolahData); // Log FormData di context
+       const form = new FormData();
 
-       const response = await axiosInstance.put(`/sekolah`, sekolahData, {
+       // Tambahkan JSON sebagai string di dalam form-data
+       const sekolahRequest = JSON.stringify({
+         id: formData.id,
+         sekolah: formData.sekolah,
+         npsn: formData.npsn,
+         email: formData.email,
+         noHp: formData.noHp,
+       });
+       form.append("sekolah_request", sekolahRequest);
+1
+       console.log("sekolah_request yang akan dikirim:", sekolahRequest);
+
+       // Tambahkan file logo
+       if (formData.logo) {
+         form.append("logo", formData.logo);
+         console.log("Logo yang akan dikirim:", formData.logo);
+       }
+
+       // Kirim data
+       const response = await axiosInstance.put("/sekolah", form, {
          headers: {
            "Content-Type": "multipart/form-data",
          },
        });
-        console.log("Response dari server:", response.data);
 
+       console.log("Respon dari server:", response.data);
        setSekolah(response.data);
        setStatus("succeeded");
      } catch (err) {
@@ -63,6 +81,8 @@ export const SekolahProvider = ({children}) => {
        setStatus("failed");
      }
    };
+
+
 
      const deleteSekolah = async (id) => {
        setStatus("loading");

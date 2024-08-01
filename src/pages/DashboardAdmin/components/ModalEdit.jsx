@@ -2,9 +2,7 @@ import React, {useEffect, useState, useContext} from "react";
 import {SekolahContext} from "../../../context/AdminContext";
 
 export default function ModalEdit({isOpen, onClose, selectedItem}) {
-  if (!isOpen) return null;
-
-  const {updateSekolah} = useContext(SekolahContext);
+  const {updateSekolah, getAllSekolah} = useContext(SekolahContext);
 
   const [formData, setFormData] = useState({
     id: "",
@@ -12,7 +10,7 @@ export default function ModalEdit({isOpen, onClose, selectedItem}) {
     npsn: "",
     email: "",
     no_hp: "",
-    logo: null, // Change to null or File object
+    logo: null,
   });
   const [logoPreview, setLogoPreview] = useState("");
 
@@ -24,9 +22,9 @@ export default function ModalEdit({isOpen, onClose, selectedItem}) {
         npsn: selectedItem.npsn || "",
         email: selectedItem.email || "",
         no_hp: selectedItem.no_hp || "",
-        logo: selectedItem.logo || null, // Set to null if no logo
+        logo: selectedItem.logo || null,
       });
-      setLogoPreview(selectedItem.logo || ""); // Set preview URL if exists
+      setLogoPreview(selectedItem.logo || "");
     }
   }, [selectedItem]);
 
@@ -59,39 +57,33 @@ export default function ModalEdit({isOpen, onClose, selectedItem}) {
  };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("FormData state sebelum dikirim:", formData); 
+ const handleSubmit = async (e) => {
+   e.preventDefault();
 
-    const formDataToSend = new FormData();
+   // Data yang akan dikirim
+   const dataToSend = {
+     id: formData.id,
+     sekolah: formData.sekolah,
+     npsn: formData.npsn,
+     email: formData.email,
+     noHp: formData.no_hp,
+     logo: formData.logo,
+   };
 
-    formDataToSend.append(
-      "sekolah_request",
-      JSON.stringify({
-        id: formData.id,
-        sekolah: formData.sekolah,
-        npsn: formData.npsn,
-        email: formData.email,
-        no_hp: formData.no_hp,
-      })
-    );
-    if (formData.logo) {
-      formDataToSend.append("logo", formData.logo);
-    }
+   console.log("Data yang akan dikirim untuk update:", dataToSend);
 
-    for (let pair of formDataToSend.entries()) {
-      console.log(`${pair[0]}, ${pair[1]}`); // Log FormData entries
-    }
+   try {
+     await updateSekolah(dataToSend);
+     onClose();
+     getAllSekolah();
+   } catch (err) {
+     console.error("Kesalahan saat mengirim data:", err.message);
+   }
+ };
 
-    try {
-      await updateSekolah(formDataToSend);
-    } catch (err) {
-        console.error("Gagal mengirim data:", err.message);
-    }
-    onClose(); // close modal after update
-  };
 
   return (
+    isOpen && 
     <div>
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div className="bg-white p-5 rounded-lg shadow-lg w-1/2">

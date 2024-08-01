@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-
-const dataGolongan = [
-  { id: 1, nama: "Golongan 1", jumlah: "Rp.1.500.000" },
-  { id: 2, nama: "Golongan 2", jumlah: "Rp.2.000.000" },
-  { id: 3, nama: "Golongan 3", jumlah: "Rp.2.500.000" },
-  { id: 4, nama: "Golongan 4", jumlah: "Rp.3.000.000" },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { addSiswa } from "../../redux/features/siswaSlice";
+import { fetchAllGolongan } from "../../redux/features/golonganSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterSiswa() {
+  const dataGolongan = useSelector((state) => state.golongan.list.data);
   const [form, setForm] = useState({
     nama: "",
     nis: "",
@@ -19,15 +17,21 @@ export default function RegisterSiswa() {
   });
   const [selectedGolongan, setSelectedGolongan] = useState("");
   const [tagihan, setTagihan] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchAllGolongan());
+  }, [dispatch]);
 
   const handleGolonganChange = (e) => {
     const selectedValue = e.target.value;
     setSelectedGolongan(selectedValue);
 
     const selectedGolonganData = dataGolongan.find(
-      (golongan) => golongan.nama === selectedValue
+      (golongan) => golongan.golongan === selectedValue
     );
-    setTagihan(selectedGolonganData ? selectedGolonganData.jumlah : "");
+    setTagihan(selectedGolonganData ? selectedGolonganData.spp : "");
     setForm({
       ...form,
       golonganId: selectedGolonganData ? selectedGolonganData.id : "",
@@ -41,8 +45,8 @@ export default function RegisterSiswa() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
-    console.log("Data disimpan");
+    dispatch(addSiswa(form));
+    navigate("daftarsiswa");
   };
 
   return (
@@ -177,11 +181,13 @@ export default function RegisterSiswa() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
                 >
                   <option value="">Pilih Golongan</option>
-                  {dataGolongan.map((golongan) => (
-                    <option key={golongan.id} value={golongan.nama}>
-                      {golongan.nama}
-                    </option>
-                  ))}
+                  {!dataGolongan
+                    ? "null"
+                    : dataGolongan.map((golongan) => (
+                        <option key={golongan.id} value={golongan.golongan}>
+                          {golongan.golongan}
+                        </option>
+                      ))}
                 </select>
               </div>
               <div>

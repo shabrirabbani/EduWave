@@ -133,7 +133,7 @@ export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleS
           </ul>
           <div className="mt-auto">
             <div className="flex flex-col justify-center items-center">
-              <img src={logo2} alt="logo" className="h-7" />
+              <img src={school ? school.logo : "none"} alt="logo" className="h-7" />
               {!isMinimized && (
                 <h1 className="font-semibold text-center uppercase">
                   {school ? school.sekolah : "none"}
