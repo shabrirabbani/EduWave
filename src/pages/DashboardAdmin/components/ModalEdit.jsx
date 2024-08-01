@@ -2,8 +2,6 @@ import React, {useEffect, useState, useContext} from "react";
 import {SekolahContext} from "../../../context/AdminContext";
 
 export default function ModalEdit({isOpen, onClose, selectedItem}) {
-  if (!isOpen) return null;
-
   const {updateSekolah, getAllSekolah} = useContext(SekolahContext);
 
   const [formData, setFormData] = useState({
@@ -85,6 +83,7 @@ export default function ModalEdit({isOpen, onClose, selectedItem}) {
 
 
   return (
+    isOpen && 
     <div>
       <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
         <div className="bg-white p-5 rounded-lg shadow-lg w-1/2">

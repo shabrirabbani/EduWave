@@ -9,7 +9,6 @@ export const login = (credentials) => async (dispatch) => {
               const {username, token, roles} = response.data.data;
               localStorage.setItem("token", token);
               dispatch(loginSuccess({username, token, roles}));
-              console.log("Login success", token, username, roles);
             }
     } catch (error) {
         dispatch(setError(error.response?.data?.message || error.message));

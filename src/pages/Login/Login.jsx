@@ -46,7 +46,7 @@ export default function Login() {
     <div className="bg-dark-green">
       <div className="flex items-center justify-center h-screen space-x-10 divide-x-2">
         <div className="flex flex-col justify-center">
-          <img src={logo} className="h-14 mb-3" />
+          <img src={logo} className="h-14 mb-3" alt="Logo" />
           <h1 className="text-gray-300 text-4xl font-montserrat font-semibold mb-3">
             Welcome to{" "}
             <a href="/" className="text-primary hover:text-green-700">
@@ -57,12 +57,12 @@ export default function Login() {
             Jika belum ada akun
           </p>
           <Link
-            to={"/gabung"}
+            to="/gabung"
             className="text-primary text-center underline hover:text-green-700">
             Daftar disini
           </Link>
         </div>
-        <div className="text-white ps-10">
+        <div className="text-white ps-10 max-w-xs">
           <h1 className="text-3xl font-semibold text-center">Login</h1>
           <form className="mt-5" onSubmit={handleSubmit}>
             <div className="relative z-0 w-full mb-5 group">
@@ -72,7 +72,9 @@ export default function Login() {
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-white appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                className={`block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 ${
+                  error ? "border-red-500" : "border-white"
+                } appearance-none focus:outline-none focus:ring-0 focus:border-primary peer`}
                 placeholder=" "
                 required
               />
@@ -89,7 +91,9 @@ export default function Login() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-white appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                className={`block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 ${
+                  error ? "border-red-500" : "border-white"
+                } appearance-none focus:outline-none focus:ring-0 focus:border-primary peer`}
                 placeholder=" "
               />
               <label
@@ -98,13 +102,17 @@ export default function Login() {
                 Password
               </label>
             </div>
+            {error && (
+              <p className="text-red-500 text-xs mt-1 max-w-xs">
+                Username atau Password salah
+              </p>
+            )}
             <button
               type="submit"
               className="w-full bg-primary hover:bg-green-700 text-white p-2 rounded-md mt-5">
               Login
             </button>
             {status === "loading" && <p>Loading...</p>}
-            {error && <p style={{color: "red"}}>{error}</p>}
           </form>
         </div>
       </div>
