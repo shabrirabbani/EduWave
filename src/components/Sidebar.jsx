@@ -2,8 +2,28 @@ import { IconLayoutDashboard, IconLogout, IconUser, IconUserPlus } from '@tabler
 import React from 'react'
 import { Link } from 'react-router-dom';
 import logo from '../assets/images/Logo.svg';
+import Swal from 'sweetalert2';
 
 export default function Sidebar() {
+
+   const handleLogout = () => {
+     Swal.fire({
+       title: "Logout",
+       text: "Are you sure you want to logout?",
+       icon: "warning",
+       showCancelButton: true,
+       confirmButtonColor: "#3085d6",
+       cancelButtonColor: "#d33",
+       confirmButtonText: "Yes",
+       cancelButtonText: "No",
+     }).then((result) => {
+       if (result.isConfirmed) {
+         localStorage.clear();
+         window.location.href = "/";
+       }
+     });
+   };
+
   return (
     <div>
       <button
@@ -15,7 +35,6 @@ export default function Sidebar() {
         <span className="sr-only">Open sidebar</span>
         <svg
           className="w-6 h-6"
-          aria-hidden="true"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg">
@@ -62,15 +81,15 @@ export default function Sidebar() {
                 <span className="flex-1 ms-3 whitespace-nowrap">Register</span>
               </Link>
             </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="flex items-center p-2 text-white rounded-lg  hover:bg-gray-100 hover:text-black  group">
+                <IconLogout size={22} />
+                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
+              </button>
+            </li>
           </ul>
-          <div className="mt-auto">
-            <Link
-              to={"/"}
-              className="flex items-center p-2 text-white rounded-lg  hover:bg-gray-100 hover:text-black  group">
-              <IconLogout size={22} />
-              <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
-            </Link>
-          </div>
         </div>
       </aside>
       <div className="p-4 sm:ml-64">

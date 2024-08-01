@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CardInformation from '../../components/CardInformation'
 import ChartComponent from './components/ChartComponent';
 import PieChartComponent from './components/PieChartComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchSekolahData } from '../../redux/features/sekolahSlice';
 
 
 const studentsData = [
@@ -18,9 +21,21 @@ const belumLunasCount = studentsData.filter(
 ).length;
 
 export default function DashboardSekolah() {
+  const {username} = useParams();
+  const dispatch = useDispatch()
+  const school = useSelector((state) => state.sekolah.data);
+
+  useEffect(() => {
+    if (username) {
+      dispatch(fetchSekolahData(username));
+    }
+  }, [dispatch, username]);
+
+
   return (
+   
     <div>
-      <h1 className="text-3xl font-semibold mb-5">SMA NEGERI 26 JAKARTA</h1>
+      <h1 className="text-3xl font-semibold mb-5 uppercase">{school ? school.sekolah : "none"}</h1>
       <h1 className='bg-red-500/25 my-5 p-2 font-bold text-center'>Daftarkan golongan terlebih dahulu sebelum mendaftarkan murid!</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <CardInformation

@@ -1,75 +1,200 @@
-import React from 'react'
+import React, {useState, useContext} from "react";
+import {useNavigate} from "react-router-dom";
+import {SekolahContext} from "../../context/AdminContext";
+import Swal from "sweetalert2";
 
 export default function RegisterAccount() {
+  const {createSekolah, status, error} = useContext(SekolahContext);
+  const [formData, setFormData] = useState({
+    sekolah: "",
+    noHp: "",
+    npsn: "",
+    email: "",
+    password: "",
+    logo: null,
+  });
+  const [errors, setErrors] = useState({
+    noHp: "",
+    npsn: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const {name, value, type, files} = e.target;
+    if (type === "file") {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      if (name === "noHp" || name === "npsn") {
+        if (!/^\d*$/.test(value)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: "Please enter a valid number",
+          }));
+          return; // Don't update formData if value is not a number
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: "",
+          }));
+        }
+      }
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  };
+
+
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+
+   // Buat FormData
+   const formDataToSend = new FormData();
+
+   // Tambahkan data JSON ke FormData
+   formDataToSend.append(
+     "sekolah_request",
+     JSON.stringify({
+       sekolah: formData.sekolah,
+       npsn: formData.npsn,
+       email: formData.email,
+       noHp: formData.noHp,
+       password: formData.password,
+     })
+   );
+
+   // Tambahkan file gambar ke FormData
+   if (formData.logo) {
+     formDataToSend.append("logo", formData.logo);
+   }
+
+   console.log("Form Data to Send:");
+   for (let pair of formDataToSend.entries()) {
+     console.log(pair[0] + ": " + pair[1]);
+   }
+
+   try {
+     await createSekolah(formDataToSend);
+     if (status === "succeeded") {
+      Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+      }).fire({
+        icon: "success",
+        title: "Sekolah berhasil didaftarkan",
+      });
+      navigate("/dashboardadmin/listusers");
+     }
+   } catch (err) {
+      Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+      }).fire({
+        icon: "error",
+        title: "Gagal mendaftarkan sekolah",
+      });
+     console.error("Error creating sekolah:", err);
+   }
+ };
+
   return (
     <div>
-      <h1 className='text-lg font-semibold'>Register Akun</h1>
-      <div className='mt-5'>
-        <form class=" mx-auto">
-          <div class="relative z-0 w-full mb-5 group">
-            <input
-              type="namasekolah"
-              name="namasekolah"
-              id="namasekolah"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              for="namasekolah"
-              class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+      <h1 className="text-lg font-semibold">Register Akun</h1>
+      <div className="mt-5">
+        <form className="max-w-xl" onSubmit={handleSubmit}>
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
               Nama Sekolah
             </label>
-          </div>
-          <div class="relative z-0 w-full mb-5 group">
             <input
-              type="npsn"
-              name="npsn"
-              id="npsn"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              type="text"
+              name="sekolah"
+              value={formData.sekolah}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
               required
             />
-            <label
-              for="npsn"
-              class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              NPSN
-            </label>
           </div>
-          <div class="relative z-0 w-full mb-5 group">
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Nomor NPSN
+            </label>
+            <input
+              type="text"
+              name="npsn"
+              value={formData.npsn}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
+              required
+            />
+            {errors.npsn && <p style={{color: "red"}}>{errors.npsn}</p>}
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Email Sekolah
+            </label>
             <input
               type="email"
               name="email"
-              id="email"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              value={formData.email}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
               required
             />
-            <label
-              for="email"
-              class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Email address
-            </label>
           </div>
-          <div class="relative z-0 w-full mb-5 group">
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Nomor HP
+            </label>
+            <input
+              type="text"
+              name="noHp"
+              value={formData.noHp}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
+              required
+            />
+            {errors.noHp && <p style={{color: "red"}}>{errors.noHp}</p>}
+          </div>
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Password
+            </label>
             <input
               type="password"
               name="password"
-              id="password"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              value={formData.password}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
               required
             />
-            <label
-              for="password"
-              class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0  peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-              Password
-            </label>
           </div>
-    
+
+          <div className="mb-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Masukkan Logo Sekolah
+            </label>
+            <input
+              type="file"
+              name="logo"
+              accept="image/*"
+              onChange={handleChange}
+              className="rounded-lg border border-gray-500 w-full mb-5"
+            />
+          </div>
+
           <button
             type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
             Submit
           </button>
         </form>

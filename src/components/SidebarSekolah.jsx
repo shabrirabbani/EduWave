@@ -13,8 +13,10 @@ import {Link, NavLink} from "react-router-dom";
 import logo from "../assets/images/Logo.svg";
 import logo2 from "../assets/react.svg";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleSidebarOpen,}) {
+  const school = useSelector((state) => state.sekolah.data);
 
   const handleLogout = () => {
     Swal.fire({
@@ -28,7 +30,7 @@ export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleS
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        //localStorage.clear();
+        localStorage.clear();
         window.location.href = "/";
       }
     });
@@ -78,7 +80,7 @@ export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleS
           <ul className="space-y-2 font-medium flex-1 text-white">
             <li>
               <NavLink
-                to={"/dashboard"}
+                to={""}
                 className="flex items-center p-2 rounded-lg hover:text-primary group transition-all duration-300 ease-in-out">
                 <IconLayoutDashboard size={22} />
                 {!isMinimized && <span className="ms-3">Dashboard</span>}
@@ -133,8 +135,8 @@ export default function SidebarSekolah({isMinimized,isOpen,toggleSidebar,toggleS
             <div className="flex flex-col justify-center items-center">
               <img src={logo2} alt="logo" className="h-7" />
               {!isMinimized && (
-                <h1 className="font-semibold text-center">
-                  SMA NEGERI 26 JAKARTA
+                <h1 className="font-semibold text-center uppercase">
+                  {school ? school.sekolah : "none"}
                 </h1>
               )}
             </div>

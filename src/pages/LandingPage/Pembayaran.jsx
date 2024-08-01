@@ -11,11 +11,13 @@ export default function Pembayaran() {
           Pilih sekolah anda dan masukkan Nomor Induk Siswa (NIS)
         </h1>
       </div>
-      <div className='max-w-screen-md mx-auto'> 
-        <InputPembayaran/>
-        <div className='mt-20 flex flex-col sm:flex-row items-center justify-center pb-20'>
-            <img src={mockup} alt="mockup" className="h-96" />
-            <h1 className='text-lg w-64'>Anda dapat melihat riwayat pembayaran SPP melalui aplikasi Eduwave</h1>
+      <div className="max-w-screen-md mx-auto">
+        <InputPembayaran />
+        <div className="mt-20 flex flex-col sm:flex-row items-center justify-center pb-20">
+          <img src={mockup} alt="mockup" className="h-96" />
+          <h1 className="text-lg w-64 font-semibold font-montserrat -translate-x-0 md:-translate-x-16">
+            Anda dapat melihat riwayat pembayaran SPP melalui aplikasi Eduwave
+          </h1>
         </div>
       </div>
     </div>
