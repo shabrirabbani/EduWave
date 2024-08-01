@@ -70,10 +70,6 @@ export default function ListUserAdmin() {
     setSelectedItem(null);
   };
 
-
-
-
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
