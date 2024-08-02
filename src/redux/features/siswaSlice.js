@@ -7,6 +7,11 @@ export const fetchAllSiswa = createAsyncThunk("siswa/fetchAll", async () => {
   return response.data.data;
 });
 
+export const fetchSiswaById = createAsyncThunk("siswa/fetchById", async (id) => {
+  const response = await axiosInstance.get(`/siswa/${id}`);
+  return response.data.data;
+});
+
 export const addSiswa = createAsyncThunk("siswa/add", async (siswaData) => {
   const response = await axiosInstance.post(`/siswa`, siswaData);
   return response.data.data;
@@ -14,8 +19,9 @@ export const addSiswa = createAsyncThunk("siswa/add", async (siswaData) => {
 
 export const updateSiswa = createAsyncThunk(
   "siswa/update",
-  async ({ id, siswaData }) => {
-    const response = await axiosInstance.put(`/siswa/${id}`, siswaData);
+  async (siswaData) => {
+
+    const response = await axiosInstance.put(`/siswa`, siswaData);
     return response.data;
   }
 );
@@ -56,15 +62,20 @@ const siswaSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(fetchSiswaById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.list = action.payload;
+      })
       .addCase(addSiswa.fulfilled, (state, action) => {
         state.list.push(action.payload);
       })
       .addCase(updateSiswa.fulfilled, (state, action) => {
-        const index = state.list.findIndex(
-          (siswa) => siswa.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.list[index] = action.payload;
+        if (Array.isArray(state.list)) {
+          state.list = state.list.map((siswa) => 
+            siswa.id === action.payload.id ? action.payload : siswa
+          );
+        } else {
+          state.list = [action.payload];
         }
       })
       .addCase(deleteSiswa.fulfilled, (state, action) => {
@@ -74,7 +85,7 @@ const siswaSlice = createSlice({
         // Kamu bisa memperbarui status siswa di sini jika perlu.
         // Misalnya, jika response.data mengandung daftar siswa yang telah diupdate:
         action.payload.forEach((updatedSiswa) => {
-          const index = state.list.findIndex(
+          const index = state.list.map(
             (siswa) => siswa.id === updatedSiswa.id
           );
           if (index !== -1) {

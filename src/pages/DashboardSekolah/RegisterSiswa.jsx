@@ -5,6 +5,7 @@ import { fetchAllGolongan } from "../../redux/features/golonganSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterSiswa() {
+  const username = useSelector((state) => state.auth.username);
   const dataGolongan = useSelector((state) => state.golongan.list.data);
   const [form, setForm] = useState({
     nama: "",
@@ -46,120 +47,120 @@ export default function RegisterSiswa() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addSiswa(form));
-    navigate("daftarsiswa");
+    navigate(`/dashboard/${username}/daftarsiswa`)
   };
 
   return (
     <div className="ms-5">
       <h1 className="text-2xl font-semibold">Register Siswa</h1>
       <div className="mt-5">
-        <form onSubmit={handleSubmit} class=" mx-auto">
+        <form onSubmit={handleSubmit} className=" mx-auto">
           <div className="grid grid-cols-2 gap-6 space-x-6">
             <div className="">
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.nama}
                   type="text"
                   name="nama"
                   id="namasiswa"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="namasiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="namasiswa"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nama Siswa
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.nis}
                   type="text"
                   name="nis"
                   id="nis"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nis"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="nis"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nomor Induk Siswa (NIS)
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.email}
                   type="email"
                   name="email"
                   id="email"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="email"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="email"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Email Siswa
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.noHp}
                   type="text"
                   name="noHp"
                   id="nohpsiswa"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nohpsiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="nohpsiswa"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nomor HP Siswa
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.noHpOrtu}
                   type="text"
                   name="noHpOrtu"
                   id="nohportu"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nohportu"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="nohportu"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nomor HP Orang Tua
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
                   onChange={handleChange}
                   value={form.alamat}
                   type="text"
                   name="alamat"
                   id="alamat"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="alamat"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  htmlFor="alamat"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Alamat
                 </label>
@@ -169,7 +170,7 @@ export default function RegisterSiswa() {
               <h3 className="text-lg font-semibold">Uang Pembayaran</h3>
               <div className="">
                 <label
-                  for="golongan"
+                  htmlFor="golongan"
                   className="block mb-2 text-sm font-medium text-gray-90"
                 >
                   Pilih Golongan
@@ -207,7 +208,7 @@ export default function RegisterSiswa() {
               </div>
               <div>
                 <label
-                  for="first_name"
+                  htmlFor="first_name"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Status Pembayaran
@@ -216,8 +217,8 @@ export default function RegisterSiswa() {
                   id="status_pembayaran"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
                 >
-                  <option selected>Belum Bayar</option>
-                  <option value="Lunas">Lunas</option>
+                  <option defaultValue="BELUM_LUNAS">Belum Lunas</option>
+                  <option value="LUNAS">Lunas</option>
                 </select>
               </div>
             </div>

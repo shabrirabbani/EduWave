@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { IconEdit, IconInfoCircle, IconTrash } from "@tabler/icons-react";
+import { IconArrowsExchange, IconCheck, IconCircleCheck, IconEdit, IconInfoCircle, IconTrash, IconXboxX } from "@tabler/icons-react";
 import ModalSiswa from "./ModalSiswa";
-import Pagination from "./Pagination"; // Import komponen Pagination
+import Pagination from "./Pagination";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSiswa,
   fetchAllSiswa,
@@ -21,13 +21,15 @@ export default function TabelDaftarSiswa({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(30);
+  const username = useSelector((state) => state.auth.username);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = data.slice(startIndex, startIndex + itemsPerPage);
+  // const currentItems = data.slice(startIndex, startIndex + itemsPerPage);
 
   const goToPage = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -95,13 +97,30 @@ export default function TabelDaftarSiswa({
         dispatch(updateStatus(checkedItem));
         Swal.fire("Berhasil", "Status pembayaran telah direset", "success");
         setCheckedItem([]);
+        dispatch(fetchAllSiswa());
       }
     });
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteSiswa(id));
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Ingin mengubah status siswa?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya",
+      });
+      if (result.isConfirmed) {
+        await dispatch(deleteSiswa(id));
+        await dispatch(fetchAllSiswa());
+      }
+    } catch (error) {
+      Swal.fire("Terjadi Kesalahan!", "Gagal menghapus data.", "error");
+    }
   };
+
 
   return (
     <div className="bg-gray-300 rounded-lg p-2">
@@ -111,8 +130,7 @@ export default function TabelDaftarSiswa({
           <select
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
-            className=" text-sm bg-transparent border-0 border-b-2 border-b-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-          >
+            className=" text-sm bg-transparent border-0 border-b-2 border-b-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
             <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -121,8 +139,7 @@ export default function TabelDaftarSiswa({
         </div>
         <button
           className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white text-sm font-semibold"
-          onClick={handleResetPembayaran}
-        >
+          onClick={handleResetPembayaran}>
           Reset Pembayaran
         </button>
       </div>
@@ -152,12 +169,14 @@ export default function TabelDaftarSiswa({
               <th scope="col" className="px-6 py-3 border-r">
                 No HP ortu
               </th>
-
               <th scope="col" className="px-6 py-3 border-r">
                 Status Pembayaran
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 border-r">
                 Aksi
+              </th>
+              <th scope="col" className="max-w-14 py-3">
+                Status Siswa
               </th>
             </tr>
           </thead>
@@ -169,11 +188,10 @@ export default function TabelDaftarSiswa({
                 </td>
               </tr>
             ) : (
-              currentItems.map((item) => (
+              data.map((item) => (
                 <tr
                   className="bg-white border border-gray-300 text-center"
-                  key={item.id}
-                >
+                  key={item.id}>
                   <td className="w-4 p-4">
                     <div className="flex items-center">
                       <input
@@ -185,7 +203,7 @@ export default function TabelDaftarSiswa({
                     </div>
                   </td>
                   <td className="text-center">
-                    {startIndex + currentItems.indexOf(item) + 1}
+                    {startIndex + data.indexOf(item) + 1}
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-start overflow-hidden text-ellipsis max-w-64">
                     {item.nama}
@@ -205,24 +223,28 @@ export default function TabelDaftarSiswa({
                     )}
                   </td>
                   <td className="px-6 py-4 flex justify-center">
-                    <button
-                      className="bg-green-500 p-2 rounded-lg text-white me-2"
+                    <button 
                       onClick={() => handleInfoClick(item)}
-                    >
-                      <IconInfoCircle size={15} />
+                      className="me-2 text-green-500"
+                      >
+                      <IconInfoCircle size={25} stroke={2} />
                     </button>
                     <Link
-                      to={`/dashboard/edit/${item.id}`}
-                      className="bg-blue-500 p-2 rounded-lg text-white me-2"
-                    >
-                      <IconEdit size={15} />
+                      to={`/dashboard/${username}/edit/${item.id}`}
+                      className="text-blue-500">
+                      <IconEdit size={25} stroke={2} />
                     </Link>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="bg-red-500 p-2 rounded-lg text-white"
-                    >
-                      <IconTrash size={15} />
-                    </button>
+                  </td>
+                  <td className="py-4">
+                    {item.is_active ? (
+                      <button onClick={() => handleDelete(item.id)}>
+                        <IconCircleCheck size={20} color="green" />
+                      </button>
+                    ) : (
+                      <button onClick={() => handleDelete(item.id)}>
+                        <IconXboxX size={20} color="red" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))

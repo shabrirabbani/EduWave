@@ -1,262 +1,101 @@
 import React, {useState, useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-
-const initialdata = [
-  {
-    id: 1,
-    nama: "Ahmad Ilham Ramadhan ahmad sbunaj jajdodn ahahahahahah hhhhh",
-    nis: "1234567890",
-    noHpOrtu: "081353241122",
-    tglpembayaran: "12-12-2021",
-    status: "Lunas",
-    golongan: "golongan 1",
-  },
-  {
-    id: 2,
-    nama: "Budi Santoso",
-    nis: "0987654321",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 2",
-  },
-  {
-    id: 3,
-    nama: "Cici Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 3",
-  },
-  {
-    id: 4,
-    nama: "Dodi Susanto",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 4",
-  },
-  {
-    id: 5,
-    nama: "Euis Siti",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 5",
-  },
-  {
-    id: 6,
-    nama: "Fauzi Rahman",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 6",
-  },
-  {
-    id: 7,
-    nama: "Gita Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 7",
-  },
-  {
-    id: 8,
-    nama: "Harianto",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 8",
-  },
-  {
-    id: 9,
-    nama: "Irfan Surya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 9",
-  },
-  {
-    id: 10,
-    nama: "Joko Susilo",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 10",
-  },
-  {
-    id: 11,
-    nama: "Kiki Suryanto",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 11",
-  },
-  {
-    id: 12,
-    nama: "Lina Sari",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 12",
-  },
-  {
-    id: 13,
-    nama: "Maman Sulaeman",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 13",
-  },
-  {
-    id: 14,
-    nama: "Nana Susanti",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 14",
-  },
-  {
-    id: 15,
-    nama: "Oki Surya Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 15",
-  },
-  {
-    id: 16,
-    nama: "Paijo Susilo",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-    golongan: "golongan 16",
-  },
-  {
-    id: 17,
-    nama: "Qonita Sari Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Belum Lunas",
-  },
-  {
-    id: 18,
-    nama: "Rudi Surya Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 19,
-    nama: "Siti Sari Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 20,
-    nama: "Tono Susilo",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 21,
-    nama: "Ujang Surya Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 22,
-    nama: "Vina Sari Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 23,
-    nama: "Wawan Susilo",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 24,
-    nama: "Xena Surya Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 25,
-    nama: "Yudi Susilo",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-  {
-    id: 26,
-    nama: "Zainal Surya Wijaya",
-    nis: "1231231230",
-    noHpOrtu: "081234567890",
-    tglpembayaran: "01-01-2022",
-    status: "Lunas",
-  },
-];
+import { fetchAllSiswa, fetchSiswaById, updateSiswa } from "../../redux/features/siswaSlice";
+import { fetchAllGolongan } from "../../redux/features/golonganSlice";
+import Swal from "sweetalert2";
 
 export default function EditSiswa() {
   const {id} = useParams();
   const navigate = useNavigate();
-  const [editedData, setEditedData] = useState(null);
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.auth.username);
+  const student = useSelector((state) => state.siswa.list);
+  const dataGolongan = useSelector((state) => state.golongan.list.data);
+  const [selectedGolongan, setSelectedGolongan] = useState("");
+  const [tagihan, setTagihan] = useState("");
+  const [formData, setFormData] = useState({
+    id: "",
+    nama: "",
+    nis: "",
+    email: "",
+    noHp: "",
+    noHpOrtu: "",
+    alamat: "",
+    golonganId: "",
+  });
 
+  useEffect(() => {
+    dispatch(fetchAllGolongan());
+  }, [dispatch]);
 
  useEffect(() => {
-   const siswa = initialdata.find((s) => s.id === parseInt(id));
-   if (siswa) {
-     setEditedData(siswa);
-   } else {
-     navigate("/dashboard/daftarsiswa");
+   if (id) {
+     dispatch(fetchSiswaById(id));
    }
- }, [id, navigate]);
+ }, [dispatch, id]);
 
+ useEffect(() => {
+  if (student) {
+    setFormData({
+      id: student.id || "",
+      nama: student.nama || "",
+      nis: student.NIS || "",
+      email: student.email || "",
+      noHp: student.no_hp || "",
+      noHpOrtu: student.no_hp_ortu || "",
+      alamat: student.alamat || "",
+      golonganId: student.golongan_id || "",
+    });
+  }
+}, [student]);
+
+ const handleGolonganChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedGolongan(selectedValue);
+
+    const selectedGolonganData = dataGolongan.find(
+      (golongan) => golongan.golongan === selectedValue
+    );
+    setTagihan(selectedGolonganData ? selectedGolonganData.spp : "")
+    setFormData({
+      ...formData,
+      golonganId: selectedGolonganData ? selectedGolonganData.id : "",
+    })
+  };
   
   const handleChange = (e) => {
-    const {name, value} = e.target;
-    setEditedData({...editedData, [name]: value});
+    const {name, value, type} = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? +value : value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data disimpan:", editedData);
-    navigate("/dashboard/daftarsiswa");
+    console.log("Data disimpan:", formData);
+    try {
+      await dispatch(updateSiswa(formData));
+      Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+      }).fire({
+        icon: "success",
+        title: "Data siswa berhasil diubah",
+      });
+      navigate(`/dashboard/${username}/daftarsiswa`);
+    } catch (error){
+        console.error("Failed to update siswa:", error);
+    }
   };
 
-  if (!editedData) return <div>Loading...</div>;
-
+  const handleCancel = async () => {
+    await dispatch(fetchAllSiswa());
+    navigate(`/dashboard/${username}/daftarsiswa`);
+  }
 
   return (
     <div className="ms-5">
@@ -270,7 +109,7 @@ export default function EditSiswa() {
                   type="text"
                   name="nama"
                   id="nama"
-                  value={editedData.nama}
+                  value={formData.nama}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -287,7 +126,7 @@ export default function EditSiswa() {
                   type="text"
                   name="nis"
                   id="nis"
-                  value={editedData.nis}
+                  value={formData.nis}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -304,7 +143,7 @@ export default function EditSiswa() {
                   type="email"
                   name="email"
                   id="email"
-                  value={editedData.email}
+                  value={formData.email}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -321,7 +160,7 @@ export default function EditSiswa() {
                   type="text"
                   name="nohpsiswa"
                   id="nohpsiswa"
-                  value={editedData.nohpsiswa}
+                  value={formData.noHp}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -338,7 +177,7 @@ export default function EditSiswa() {
                   type="text"
                   name="nohportu"
                   id="nohportu"
-                  value={editedData.noHpOrtu}
+                  value={formData.noHpOrtu}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -355,7 +194,7 @@ export default function EditSiswa() {
                   type="text"
                   name="alamat"
                   id="alamat"
-                  value={editedData.alamat}
+                  value={formData.alamat}
                   onChange={handleChange}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
@@ -378,14 +217,19 @@ export default function EditSiswa() {
                 </label>
                 <select
                   id="golongan"
-                  name="golongan"
-                  value={editedData.golongan}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2">
-                  <option value="">Pilih Golongan</option>
-                  <option value="1">Golongan 1</option>
-                  <option value="2">Golongan 2</option>
-                  <option value="3">Golongan 3</option>
+                  value={formData.golonganId || ""}
+                  onChange={handleGolonganChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
+                  <option value="" disabled>
+                    Pilih Golongan
+                  </option>
+                  {!dataGolongan
+                    ? "null"
+                    : dataGolongan.map((golongan) => (
+                        <option key={golongan.id} value={golongan.golongan}>
+                          {golongan.golongan}
+                        </option>
+                      ))}
                 </select>
               </div>
               <div>
@@ -397,7 +241,7 @@ export default function EditSiswa() {
                 <input
                   type="text"
                   id="tagihan"
-                  value={editedData.tagihan}
+                  value={student.tagihan}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2"
                   disabled
                 />
@@ -411,11 +255,11 @@ export default function EditSiswa() {
                 <select
                   id="status_pembayaran"
                   name="status_pembayaran"
-                  value={editedData.status}
+                  value={student.status || ""}
                   onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2">
-                  <option value="Belum Bayar">Belum Bayar</option>
-                  <option value="Lunas">Lunas</option>
+                  <option value="BELUM_LUNAS">Belum Bayar</option>
+                  <option value="LUNAS">Lunas</option>
                 </select>
               </div>
             </div>
@@ -427,7 +271,7 @@ export default function EditSiswa() {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/dashboard/daftarsiswa")}
+            onClick={handleCancel}
             className="text-white bg-red-500 hover:bg-red-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
             Batal
           </button>

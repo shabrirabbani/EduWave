@@ -40,7 +40,7 @@ export default function DaftarSiswa() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-5">
-        Daftar Seluruh Siswa{console.log(initialdata)}
+        Daftar Seluruh Siswa
       </h1>
       <FilterDaftarSiswa onFilter={handleFilter} />
       <TabelDaftarSiswa
