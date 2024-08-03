@@ -160,22 +160,22 @@ export default function TabelDaftarSiswa({
               <th scope="col" className="py-1 px-2">
                 No
               </th>
-              <th scope="col" className="px-6 py-3 text-start border-r">
+              <th scope="col" className="px-6 py-2 text-start border-r">
                 Nama
               </th>
-              <th scope="col" className="px-6 py-3 border-r">
+              <th scope="col" className="px-6 py-2 border-r">
                 NIS
               </th>
-              <th scope="col" className="px-6 py-3 border-r">
+              <th scope="col" className="px-6 py-2 border-r">
                 No HP ortu
               </th>
-              <th scope="col" className="px-6 py-3 border-r">
+              <th scope="col" className="py-2 border-r">
                 Status Pembayaran
               </th>
-              <th scope="col" className="px-6 py-3 border-r">
+              <th scope="col" className="px-3 py-2 border-r">
                 Aksi
               </th>
-              <th scope="col" className="max-w-14 py-3">
+              <th scope="col" className="max-w-12 py-2">
                 Status Siswa
               </th>
             </tr>
@@ -211,7 +211,7 @@ export default function TabelDaftarSiswa({
                   <td className="px-6 py-4">{item.NIS}</td>
                   <td className="px-6 py-4">{item.no_hp_ortu}</td>
 
-                  <td className="px-6 py-4">
+                  <td className="py-4">
                     {item.status === "LUNAS" ? (
                       <span className="bg-green-500 text-white text-xs font-medium me-2 p-2 rounded-lg">
                         {item.status}
@@ -222,17 +222,16 @@ export default function TabelDaftarSiswa({
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 flex justify-center">
-                    <button 
+                  <td className="px-2 py-4 flex justify-center">
+                    <button
                       onClick={() => handleInfoClick(item)}
-                      className="me-2 text-green-500"
-                      >
-                      <IconInfoCircle size={25} stroke={2} />
+                      className="bg-green-500 p-1.5 rounded-full text-white me-2">
+                      <IconInfoCircle size={17} />
                     </button>
                     <Link
                       to={`/dashboard/${username}/edit/${item.id}`}
-                      className="text-blue-500">
-                      <IconEdit size={25} stroke={2} />
+                      className="bg-blue-500 p-1.5 rounded-full text-white">
+                      <IconEdit size={17}/>
                     </Link>
                   </td>
                   <td className="py-4">

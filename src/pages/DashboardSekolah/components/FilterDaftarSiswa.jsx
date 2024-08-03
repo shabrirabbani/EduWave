@@ -40,8 +40,8 @@ export default function FilterDaftarSiswa({onFilter}) {
             onChange={handleStatusChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <option value="">Semua</option>
-            <option value="lunas">Lunas</option>
-            <option value="belum lunas">Belum Lunas</option>
+            <option value="LUNAS">Lunas</option>
+            <option value="BELUM_LUNAS">Belum Lunas</option>
           </select>
         </div>
       </form>

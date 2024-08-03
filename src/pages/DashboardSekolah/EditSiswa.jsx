@@ -74,23 +74,47 @@ export default function EditSiswa() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Data disimpan:", formData);
+
     try {
-      await dispatch(updateSiswa(formData));
+      const result = await Swal.fire({
+        title: "Apakah Anda yakin?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Tidak",
+      });
+
+      if (result.isConfirmed) {
+        await dispatch(updateSiswa(formData));
+
+        Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+        }).fire({
+          icon: "success",
+          title: "Data siswa berhasil diubah",
+        });
+
+        navigate(`/dashboard/${username}/daftarsiswa`);
+      }
+    } catch (error) {
+      console.error("Failed to update siswa:", error);
       Swal.mixin({
         toast: true,
         position: "top-end",
         showConfirmButton: false,
         timer: 3000,
       }).fire({
-        icon: "success",
-        title: "Data siswa berhasil diubah",
+        icon: "error",
+        title: "Gagal mengubah data siswa",
       });
-      navigate(`/dashboard/${username}/daftarsiswa`);
-    } catch (error){
-        console.error("Failed to update siswa:", error);
     }
   };
+
 
   const handleCancel = async () => {
     await dispatch(fetchAllSiswa());

@@ -2,7 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosinstance";
 
 // Thunks untuk melakukan aksi async
-export const fetchAllSiswa = createAsyncThunk("siswa/fetchAll", async () => {
+export const fetchAllSiswa = createAsyncThunk(
+  "siswa/fetchAll", 
+  async () => {
   const response = await axiosInstance.get(`/siswa`);
   return response.data.data;
 });
@@ -85,7 +87,7 @@ const siswaSlice = createSlice({
         // Kamu bisa memperbarui status siswa di sini jika perlu.
         // Misalnya, jika response.data mengandung daftar siswa yang telah diupdate:
         action.payload.forEach((updatedSiswa) => {
-          const index = state.list.map(
+          const index = state.list.findIndex(
             (siswa) => siswa.id === updatedSiswa.id
           );
           if (index !== -1) {
