@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../assets/images/Logo.svg";
-import {Link, Navigate, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {
-  selectAuthRole,
-  selectAuthToken,
-  selectCurrentUser,
-  setLoginData,
-} from "../../redux/features/auth/authSlice";
+import {selectAuthRole,selectAuthToken,setLoginData,} from "../../redux/features/auth/authSlice";
 import {login} from "../../redux/features/auth/authActions";
 import {getRoleFromToken} from "../../utils/tokenDecode";
 
@@ -16,7 +11,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const token = useSelector(selectAuthToken);
-  const roles = useSelector(selectAuthRole);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();

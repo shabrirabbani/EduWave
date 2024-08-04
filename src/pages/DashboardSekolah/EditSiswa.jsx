@@ -117,8 +117,19 @@ export default function EditSiswa() {
 
 
   const handleCancel = async () => {
-    await dispatch(fetchAllSiswa());
-    navigate(`/dashboard/${username}/daftarsiswa`);
+    try {
+      await dispatch(
+        fetchAllSiswa({
+          page: 1,
+          size: 10,
+          nama: "",
+          nis: "",
+          status: "",
+        }))
+      navigate(`/dashboard/${username}/daftarsiswa`);
+    } catch (error) {
+      console.error("Failed to cancel:", error);
+    }
   }
 
   return (

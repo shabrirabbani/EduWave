@@ -12,7 +12,6 @@ export const fetchAllGolongan = createAsyncThunk(
 
 export const addGolongan = createAsyncThunk("golongan/add", async (golonganData) => {
   const response = await axiosInstance.post(`/golongan`, golonganData);
-  console.log(response.data)
   return response.data;
 });
 

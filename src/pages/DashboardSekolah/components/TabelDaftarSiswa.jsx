@@ -77,7 +77,15 @@ export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, it
         dispatch(updateStatus(checkedItem));
         Swal.fire("Berhasil", "Status pembayaran telah direset", "success");
         setCheckedItem([]);
-        dispatch(fetchAllSiswa());
+        dispatch(fetchAllSiswa(
+          {
+          page: 1,
+          size: 10,
+          nama: "",
+          nis: "",
+          status: "",
+        }
+        ));
       }
     });
   };
@@ -94,7 +102,19 @@ export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, it
       });
       if (result.isConfirmed) {
         await dispatch(deleteSiswa(id));
-        await dispatch(fetchAllSiswa());
+        try {
+          await dispatch(
+            fetchAllSiswa({
+              page: 1,
+              size: 10,
+              nama: "",
+              nis: "",
+              status: "",
+            })
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
     } catch (error) {
       Swal.fire("Terjadi Kesalahan!", "Gagal menghapus data.", "error");
