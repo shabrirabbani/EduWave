@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { IconArrowsExchange, IconCheck, IconCircleCheck, IconEdit, IconInfoCircle, IconTrash, IconXboxX } from "@tabler/icons-react";
+import { IconCircleCheck, IconEdit, IconInfoCircle, IconXboxX } from "@tabler/icons-react";
 import ModalSiswa from "./ModalSiswa";
-import Pagination from "./Pagination";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,36 +10,17 @@ import {
   updateStatus,
 } from "../../../redux/features/siswaSlice";
 
-export default function TabelDaftarSiswa({
-  data,
-  currentPage,
-  setCurrentPage,
-}) {
+export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, itemsPerPage }) {
   const [checkedItem, setCheckedItem] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [itemsPerPage, setItemsPerPage] = useState(30);
   const username = useSelector((state) => state.auth.username);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-
   const startIndex = (currentPage - 1) * itemsPerPage;
-  // const currentItems = data.slice(startIndex, startIndex + itemsPerPage);
-
-  const goToPage = (page) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
 
   const handleCheckboxChange = (id) => {
     if (checkedItem.includes(id)) {
@@ -121,22 +101,9 @@ export default function TabelDaftarSiswa({
     }
   };
 
-
   return (
-    <div className="bg-gray-300 rounded-lg p-2">
-      <div className="flex justify-between mb-2">
-        <div className="text-sm">
-          <label className="px-3 text-gray-700">Row</label>
-          <select
-            value={itemsPerPage}
-            onChange={handleItemsPerPageChange}
-            className=" text-sm bg-transparent border-0 border-b-2 border-b-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={30}>30</option>
-          </select>
-        </div>
+    <div>
+      <div className="flex justify-end mb-2">
         <button
           className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white text-sm font-semibold"
           onClick={handleResetPembayaran}>
@@ -188,7 +155,7 @@ export default function TabelDaftarSiswa({
                 </td>
               </tr>
             ) : (
-              data.map((item) => (
+              data.map((item, index) => (
                 <tr
                   className="bg-white border border-gray-300 text-center"
                   key={item.id}>
@@ -202,9 +169,7 @@ export default function TabelDaftarSiswa({
                       />
                     </div>
                   </td>
-                  <td className="text-center">
-                    {startIndex + data.indexOf(item) + 1}
-                  </td>
+                  <td className="text-center">{startIndex + index + 1}</td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-start overflow-hidden text-ellipsis max-w-64">
                     {item.nama}
                   </td>
@@ -231,7 +196,7 @@ export default function TabelDaftarSiswa({
                     <Link
                       to={`/dashboard/${username}/edit/${item.id}`}
                       className="bg-blue-500 p-1.5 rounded-full text-white">
-                      <IconEdit size={17}/>
+                      <IconEdit size={17} />
                     </Link>
                   </td>
                   <td className="py-4">
@@ -256,11 +221,6 @@ export default function TabelDaftarSiswa({
           data={modalData}
         />
       </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        goToPage={goToPage}
-      />
     </div>
   );
 }

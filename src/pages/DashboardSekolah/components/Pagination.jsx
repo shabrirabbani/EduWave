@@ -1,9 +1,13 @@
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import {IconChevronLeft, IconChevronRight} from "@tabler/icons-react";
 import React from "react";
 
 const Pagination = ({currentPage, totalPages, goToPage}) => {
   const pagesToShow = 5;
-  
+
+  if (!totalPages || totalPages < 1) {
+    return null;
+  }
+
   const startPage = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
   const endPage = Math.min(totalPages, startPage + pagesToShow - 1);
 
@@ -59,7 +63,7 @@ const Pagination = ({currentPage, totalPages, goToPage}) => {
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="px-4 py-2 hover:text-blue-500 ml-2">
-        <IconChevronRight/>
+        <IconChevronRight />
       </button>
     </div>
   );

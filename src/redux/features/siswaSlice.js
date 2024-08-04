@@ -3,11 +3,23 @@ import axiosInstance from "../../api/axiosinstance";
 
 // Thunks untuk melakukan aksi async
 export const fetchAllSiswa = createAsyncThunk(
-  "siswa/fetchAll", 
-  async () => {
-  const response = await axiosInstance.get(`/siswa`);
-  return response.data.data;
-});
+  "siswa/fetchAll",
+  async ({page, size, nama, nis, status}, {rejectWithValue}) => {
+    try {
+      const response = await axiosInstance.get("/siswa", {
+        params: {page, size, nama, nis, status},
+      });
+      const {data, paging} = response.data;
+      return {
+        data,
+        totalPages: paging.totalPages,
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message); 
+    }
+  }
+);
+
 
 export const fetchSiswaById = createAsyncThunk("siswa/fetchById", async (id) => {
   const response = await axiosInstance.get(`/siswa/${id}`);
@@ -47,6 +59,7 @@ const siswaSlice = createSlice({
   name: "siswa",
   initialState: {
     list: [],
+    totalPages: 0,
     status: "idle",
     error: null,
   },
@@ -58,7 +71,8 @@ const siswaSlice = createSlice({
       })
       .addCase(fetchAllSiswa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.list = action.payload;
+        state.list = action.payload.data;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchAllSiswa.rejected, (state, action) => {
         state.status = "failed";
