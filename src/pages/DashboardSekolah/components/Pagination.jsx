@@ -27,7 +27,7 @@ const Pagination = ({currentPage, totalPages, goToPage}) => {
         <>
           <button
             onClick={() => goToPage(1)}
-            className="px-4 py-2 bg-gray-300 text-gray-700">
+            className="px-4 py-2 text-gray-700">
             1
           </button>
           <span className="px-4 py-2 text-gray-700">...</span>
@@ -41,8 +41,8 @@ const Pagination = ({currentPage, totalPages, goToPage}) => {
         <button
           key={page}
           onClick={() => goToPage(page)}
-          className={`px-4 py-2 bg-gray-300 text-gray-500 font-semibold ${
-            currentPage === page ? "text-blue-700 underline" : ""
+          className={`px-4 py-2 text-gray-500 font-semibold ${
+            currentPage === page ? "text-blue-500 underline" : ""
           }`}>
           {page}
         </button>

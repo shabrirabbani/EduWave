@@ -10,7 +10,7 @@ import {
   updateStatus,
 } from "../../../redux/features/siswaSlice";
 
-export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, itemsPerPage }) {
+export default function TabelDaftarSiswa({ data, currentPage, itemsPerPage, setItemsPerPage }) {
   const [checkedItem, setCheckedItem] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,6 +47,10 @@ export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, it
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setModalData(null);
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(e.target.value);
   };
 
   const handleResetPembayaran = () => {
@@ -123,7 +127,19 @@ export default function TabelDaftarSiswa({ data, currentPage, setCurrentPage, it
 
   return (
     <div>
-      <div className="flex justify-end mb-2">
+      <div className="flex justify-between mb-2">
+        <div className="text-sm">
+          <label className="px-3 text-gray-700">Row</label>
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className=" text-sm bg-transparent border-0 border-b-2 border-b-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={30}>30</option>
+          </select>
+        </div>
         <button
           className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white text-sm font-semibold"
           onClick={handleResetPembayaran}>

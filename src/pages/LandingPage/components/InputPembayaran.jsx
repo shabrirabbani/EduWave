@@ -8,7 +8,6 @@ import {
 } from "../../../redux/features/transactionSlice";
 import ModalInfoSiswa from "./ModalInfoSiswa";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 
 export default function InputPembayaran() {
   const dispatch = useDispatch();
@@ -21,7 +20,7 @@ export default function InputPembayaran() {
   const [nis, setNis] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [jumlahBayar, setJumlahBayar] = useState("");
-  const [snapToken, setSnapToken] = useState("");
+  const [transactionCreated, setTransactionCreated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,42 +49,33 @@ const handleCreateTransaction = async () => {
       nis: nis,
       jumlahBayar: Number(jumlahBayar),
     };
-
-    try {
-      // Tunggu hingga createTransaction selesai
-      await dispatch(createTransaction(transactionData)).unwrap();
+      await dispatch(createTransaction(transactionData));
       console.log("Transaction created successfully");
-      // Periksa token pembayaran dan eksekusi snap
-      if (payment.token) {
-        window.snap.pay(payment.token, {
-          onSuccess: function (result) {
-            Swal.fire({
-              title: "Pembayaran Berhasil",
-              icon: "success",
-              confirmButtonColor: "#3085d6",
-            }).then(() => {
-              navigate("/dashboard");
-            });
-          },
-          onPending: function (result) {
-            console.log("pending");
-          },
-          onError: function (result) {
-            console.log("error");
-          },
-        });
-      } else {
-        console.log("Payment token is not available");
-      }
-    } catch (error) {
-      console.error("Failed to create transaction:", error);
-    }
-  } else {
-    alert("Please fill all fields.");
-  }
+      setTransactionCreated(true);
+  } 
 };
 
-
+useEffect(() => {
+  if (transactionCreated && payment?.token) {
+    window.snap.pay(payment.token, {
+      onSuccess: function (result) {
+        console.log("success", result);
+        navigate("/pembayaran");
+      },
+      onPending: function (result) {
+        console.log("pending", result);
+        navigate("/pembayaran");
+      },
+      onError: function (result) {
+        console.log("error", result);
+        navigate("/pembayaran");
+      },
+      onClose: function () {
+        console.log("modal closed");
+      },
+    });
+  }
+}, [transactionCreated, payment?.token, navigate]);
 
 
   return (

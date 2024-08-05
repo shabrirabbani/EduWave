@@ -1,4 +1,5 @@
 import React from "react";
+import numberFormatter from "../../../utils/numberFormatter";
 
 export default function ModalSiswa({isOpen, onClose, data}) {
   if (!isOpen) return null;
@@ -30,7 +31,7 @@ export default function ModalSiswa({isOpen, onClose, data}) {
           <p className="col-span-2">: {data.alamat}</p>
 
           <p className="font-semibold col-span-1">Tagihan</p>
-          <p className="col-span-2">: {data.tagihan}</p>
+          <p className="col-span-2">: {numberFormatter.format(data.tagihan)}</p>
 
           <p className="font-semibold col-span-1">Status</p>
           <p className="col-span-2">

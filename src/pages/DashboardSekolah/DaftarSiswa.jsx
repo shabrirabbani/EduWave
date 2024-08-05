@@ -9,7 +9,7 @@ export default function DaftarSiswa() {
   const dispatch = useDispatch();
   const {list: initialdata, totalPages} = useSelector((state) => state.siswa)
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [nama, setNama] = useState("");
   const [nis, setNis] = useState("");
   const [status, setStatus] = useState("");
@@ -46,6 +46,7 @@ export default function DaftarSiswa() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
         />
         <Pagination 
           currentPage={currentPage} 
