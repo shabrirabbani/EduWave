@@ -8,6 +8,7 @@ import {
 } from "../../../redux/features/transactionSlice";
 import ModalInfoSiswa from "./ModalInfoSiswa";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function InputPembayaran() {
   const dispatch = useDispatch();
@@ -49,29 +50,29 @@ const handleCreateTransaction = async () => {
       nis: nis,
       jumlahBayar: Number(jumlahBayar),
     };
-      await dispatch(createTransaction(transactionData));
-      console.log("Transaction created successfully");
-      setTransactionCreated(true);
+      try {
+        await dispatch(createTransaction(transactionData));
+        setTransactionCreated(true);
+      } catch (error) {
+        Swal.fire("Gagal", "Terjadi kesalahan saat membuat transaksi", "error");
+      }
   } 
 };
 
 useEffect(() => {
   if (transactionCreated && payment?.token) {
     window.snap.pay(payment.token, {
-      onSuccess: function (result) {
-        console.log("success", result);
+      onSuccess: function () {
         navigate("/pembayaran");
       },
-      onPending: function (result) {
-        console.log("pending", result);
+      onPending: function () {
         navigate("/pembayaran");
       },
-      onError: function (result) {
-        console.log("error", result);
+      onError: function () {
         navigate("/pembayaran");
       },
       onClose: function () {
-        console.log("modal closed");
+        navigate("/pembayaran");
       },
     });
   }

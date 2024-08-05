@@ -21,7 +21,6 @@ const createTransaction = createAsyncThunk(
     'transaction/createTransaction',
     async (transactionData) => {
         const response = await axiosInstance.post(`/transaksi`, transactionData);
-        console.log("ini yang dikirim : ",response.data)
         return response.data.data;
     }
 )
@@ -67,19 +66,12 @@ const transactionSlice = createSlice({
           })
           .addCase(createTransaction.fulfilled, (state, action) => {
             state.transactionStatus = "succeeded";
-            state.payment = action.payload
-            // Optionally update state with new transaction data if needed
-            // For example, you can add the new transaction to a list of transactions
-            console.log("Payment State Updated:", state.payment);
+            state.payment = action.payload;
             state.transaction.push(action.payload);
           })
           .addCase(createTransaction.rejected, (state, action) => {
             state.transactionStatus = "failed";
             state.transactionError = action.error.message;
-             console.error(
-               "Error during transaction creation:",
-               action.error.message
-             );
           });
 
     }

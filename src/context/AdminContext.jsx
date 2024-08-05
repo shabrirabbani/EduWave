@@ -56,13 +56,10 @@ export const SekolahProvider = ({children}) => {
          noHp: formData.noHp,
        });
        form.append("sekolah_request", sekolahRequest);
-1
-       console.log("sekolah_request yang akan dikirim:", sekolahRequest);
 
        // Tambahkan file logo
        if (formData.logo) {
          form.append("logo", formData.logo);
-         console.log("Logo yang akan dikirim:", formData.logo);
        }
 
        // Kirim data
@@ -71,12 +68,9 @@ export const SekolahProvider = ({children}) => {
            "Content-Type": "multipart/form-data",
          },
        });
-
-       console.log("Respon dari server:", response.data);
        setSekolah(response.data);
        setStatus("succeeded");
      } catch (err) {
-       console.error("Kesalahan saat mengirim data:", err.message);
        setError(err.message);
        setStatus("failed");
      }

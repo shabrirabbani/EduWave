@@ -63,8 +63,6 @@ export default function ListUserAdmin() {
       formData.append("logo", updatedData.logo);
     }
 
-    console.log("FormData:", formData);
-
     updateSekolah(formData);
     setIsModalOpen(false);
     setSelectedItem(null);

@@ -75,11 +75,6 @@ export default function RegisterAccount() {
      formDataToSend.append("logo", formData.logo);
    }
 
-   console.log("Form Data to Send:");
-   for (let pair of formDataToSend.entries()) {
-     console.log(pair[0] + ": " + pair[1]);
-   }
-
    try {
      await createSekolah(formDataToSend);
      if (status === "succeeded") {
