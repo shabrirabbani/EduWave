@@ -21,6 +21,7 @@ import { selectAuthToken, selectCurrentUser, setLoginData } from './redux/featur
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getRoleFromToken } from './utils/tokenDecode';
+import NotFound from './pages/NotFound';
 
 const route  = createBrowserRouter([
   {
@@ -100,6 +101,10 @@ const route  = createBrowserRouter([
   {
     path: '/login',
     element: <Login/>
+  },
+  {
+    path: '*',
+    element: <NotFound/>
   }
 ])
 

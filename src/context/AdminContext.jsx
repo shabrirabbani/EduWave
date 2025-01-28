@@ -35,6 +35,7 @@ export const SekolahProvider = ({children}) => {
      try {
        const response = await axiosInstance.get("/sekolah");
        setSekolahList(response.data.data);
+       console.log("ini dari respons api",response.data);
        setStatus("succeeded");
      } catch (err) {
        setError(err.message);
