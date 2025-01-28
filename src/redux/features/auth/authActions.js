@@ -1,4 +1,3 @@
-import axios from "axios";
 import { loginSuccess, setError } from "./authSlice";
 import axiosInstance from "../../../api/axiosinstance";
 

@@ -1,10 +1,8 @@
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React from 'react';
+import numberFormatter from '../../../utils/numberFormatter';
 
 export default function TabelGolongan({ data, onEditClick, onDeleteClick }) {
-  if (!Array.isArray(data)) {
-    return <p>Data tidak tersedia atau format salah.</p>;
-  }
 
   return (
     <div className="relative overflow-x-auto rounded-md">
@@ -18,7 +16,14 @@ export default function TabelGolongan({ data, onEditClick, onDeleteClick }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {!Array.isArray(data) ? (
+             <tr className="bg-white border-b text-center">
+                <td colSpan="8" className="py-4">
+                  Data tidak ada
+                </td>
+              </tr>
+          ) : (
+            data.map((item, index) => (
             <tr key={item.id} className="bg-white border-b text-center">
               <td className="text-center">{index + 1}</td>
               <th
@@ -26,7 +31,7 @@ export default function TabelGolongan({ data, onEditClick, onDeleteClick }) {
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-start">
                 {item.golongan}
               </th>
-              <td className="px-6 py-4"><span>Rp. </span> {item.spp}</td>
+              <td className="px-6 py-4">{numberFormatter.format(item.spp)}</td>
               <td className="px-6 py-4 flex justify-center">
                 <button
                   className="bg-blue-500 p-2 rounded-lg text-white me-2"
@@ -40,7 +45,8 @@ export default function TabelGolongan({ data, onEditClick, onDeleteClick }) {
                 </button>
               </td>
             </tr>
-          ))}
+          ))
+          )}
         </tbody>
       </table>
     </div>

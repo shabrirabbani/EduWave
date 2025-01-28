@@ -1,24 +1,41 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import axiosInstance from "../api/axiosInstance";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../api/axiosinstance";
 
 // Thunks untuk melakukan aksi async
 export const fetchAllSiswa = createAsyncThunk(
   "siswa/fetchAll",
-  async (username) => {
-    const response = await axiosInstance.get(`/sekolah/${username}/siswa`);
-    return response.data;
+  async ({page, size, nama, nis, status}, {rejectWithValue}) => {
+    try {
+      const response = await axiosInstance.get("/siswa", {
+        params: {page, size, nama, nis, status},
+      });
+      const {data, paging} = response.data;
+      return {
+        data,
+        totalPages: paging.totalPages,
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message); 
+    }
   }
 );
 
+
+export const fetchSiswaById = createAsyncThunk("siswa/fetchById", async (id) => {
+  const response = await axiosInstance.get(`/siswa/${id}`);
+  return response.data.data;
+});
+
 export const addSiswa = createAsyncThunk("siswa/add", async (siswaData) => {
   const response = await axiosInstance.post(`/siswa`, siswaData);
-  return response.data;
+  return response.data.data;
 });
 
 export const updateSiswa = createAsyncThunk(
   "siswa/update",
-  async ({id, siswaData}) => {
-    const response = await axiosInstance.put(`/siswa/${id}`, siswaData);
+  async (siswaData) => {
+
+    const response = await axiosInstance.put(`/siswa`, siswaData);
     return response.data;
   }
 );
@@ -28,11 +45,21 @@ export const deleteSiswa = createAsyncThunk("siswa/delete", async (id) => {
   return id;
 });
 
+export const updateStatus = createAsyncThunk(
+  "siswa/updateStatus",
+  async (listSiswaId) => {
+    await axiosInstance.post("/siswa/reset", {
+      siswaId: listSiswaId,
+    });
+  }
+);
+
 // Slice untuk siswa
 const siswaSlice = createSlice({
   name: "siswa",
   initialState: {
     list: [],
+    totalPages: 0,
     status: "idle",
     error: null,
   },
@@ -44,25 +71,43 @@ const siswaSlice = createSlice({
       })
       .addCase(fetchAllSiswa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.list = action.payload;
+        state.list = action.payload.data;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchAllSiswa.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(fetchSiswaById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.list = action.payload;
+      })
       .addCase(addSiswa.fulfilled, (state, action) => {
         state.list.push(action.payload);
       })
       .addCase(updateSiswa.fulfilled, (state, action) => {
-        const index = state.list.findIndex(
-          (siswa) => siswa.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.list[index] = action.payload;
+        if (Array.isArray(state.list)) {
+          state.list = state.list.map((siswa) => 
+            siswa.id === action.payload.id ? action.payload : siswa
+          );
+        } else {
+          state.list = [action.payload];
         }
       })
       .addCase(deleteSiswa.fulfilled, (state, action) => {
         state.list = state.list.filter((siswa) => siswa.id !== action.payload);
+      })
+      .addCase(updateStatus.fulfilled, (state, action) => {
+        // Kamu bisa memperbarui status siswa di sini jika perlu.
+        // Misalnya, jika response.data mengandung daftar siswa yang telah diupdate:
+        action.payload.forEach((updatedSiswa) => {
+          const index = state.list.findIndex(
+            (siswa) => siswa.id === updatedSiswa.id
+          );
+          if (index !== -1) {
+            state.list[index] = updatedSiswa;
+          }
+        });
       });
   },
 });

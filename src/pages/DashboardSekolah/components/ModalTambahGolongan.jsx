@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useState, useEffect } from 'react';
 
-export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) {
-
+export default function ModalTambahGolongan({ onClose, isOpen, data, mode, onSave }) {
   const [formData, setFormData] = useState({
     golongan: "",
     spp: "",
@@ -24,13 +23,26 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
     }
   }, [mode, data]);
 
+  const parseCurrency = (value) => {
+    const parsedValue = parseInt(value.replace(/[^0-9]/g, ""), 10);
+    return isNaN(parsedValue) ? "" : parsedValue;
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
   const handleSave = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
       const newData = {
         id: mode === "edit" ? data.id : null,
         golongan: formData.golongan,
-        spp: formData.spp,
+        spp: parseCurrency(formData.spp), // Parse the formatted value before sending
       };
       try {
         await onSave(newData);
@@ -41,10 +53,19 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
   };
 
   const handleChange = (e) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
-    if (name === "golongan") setNameError("");
-    if (name === "spp" && /^\d*$/.test(value)) setTagihanError("");
+    const { name, value } = e.target;
+    if (name === "spp") {
+      const cleanedValue = value.replace(/[^\d]/g, ""); // Remove non-digit characters
+      setFormData((prev) => ({ ...prev, [name]: cleanedValue }));
+      if (/^\d*$/.test(cleanedValue)) {
+        setTagihanError("");
+      } else {
+        setTagihanError("Jumlah Tagihan hanya bisa berisi angka.");
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      if (name === "golongan") setNameError("");
+    }
   };
 
   const validateInputs = () => {
@@ -63,8 +84,7 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
   const isFormValid = () => {
     return (
       formData.golongan.trim() &&
-      String(formData.spp).trim() &&
-      /^\d*$/.test(formData.spp)
+      /^\d+$/.test(formData.spp)
     );
   };
 
@@ -80,7 +100,7 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
             <div>
               <label
                 htmlFor="golongan"
-                className="block mb-2 text-sm font-medium text-gray-900 ">
+                className="block mb-2 text-sm font-medium text-gray-900">
                 Nama Golongan
               </label>
               <input
@@ -89,25 +109,25 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
                 type="text"
                 value={formData.golongan}
                 onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
-                placeholder="Masukkan Nama Golongan"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
+                placeholder="Golongan A"
               />
               {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
             </div>
             <div>
               <label
                 htmlFor="spp"
-                className="block mb-2 text-sm font-medium text-gray-900 mt-5 ">
+                className="block mb-2 text-sm font-medium text-gray-900 mt-5">
                 Jumlah Tagihan
               </label>
               <input
                 id="spp"
                 name="spp"
                 type="text"
-                value={formData.spp}
+                value={formatCurrency(parseCurrency(formData.spp))}
                 onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
-                placeholder="Masukkan Jumlah Tagihan"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
+                placeholder="Rp."
               />
               {tagihanError && (
                 <p className="text-red-500 text-sm">{tagihanError}</p>
@@ -132,7 +152,6 @@ export default function ModalTambahGolongan({onClose,isOpen,data,mode,onSave,}) 
           </form>
         </div>
       </div>
-    </div> 
-    
+    </div>
   );
 }

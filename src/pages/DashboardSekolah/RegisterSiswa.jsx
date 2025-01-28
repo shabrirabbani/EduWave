@@ -1,121 +1,188 @@
-import React, { useState } from 'react'
-
-const dataGolongan = [
-  {id: 1, nama: "Golongan 1", jumlah: "Rp.1.500.000"},
-  {id: 2, nama: "Golongan 2", jumlah: "Rp.2.000.000"},
-  {id: 3, nama: "Golongan 3", jumlah: "Rp.2.500.000"},
-  {id: 4, nama: "Golongan 4", jumlah: "Rp.3.000.000"},
-];
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {addSiswa} from "../../redux/features/siswaSlice";
+import {fetchAllGolongan} from "../../redux/features/golonganSlice";
+import {useNavigate} from "react-router-dom";
+import numberFormatter from "../../utils/numberFormatter";
 
 export default function RegisterSiswa() {
-
+  const username = useSelector((state) => state.auth.username);
+  const dataGolongan = useSelector((state) => state.golongan.list.data);
+  const [form, setForm] = useState({
+    nama: "",
+    nis: "",
+    email: "",
+    noHp: "",
+    noHpOrtu: "",
+    alamat: "",
+    golonganId: "",
+  });
   const [selectedGolongan, setSelectedGolongan] = useState("");
   const [tagihan, setTagihan] = useState("");
+  const [errors, setErrors] = useState({
+    nis: "",
+    noHp: "",
+    noHpOrtu: "",
+  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchAllGolongan());
+  }, [dispatch]);
 
   const handleGolonganChange = (e) => {
     const selectedValue = e.target.value;
     setSelectedGolongan(selectedValue);
 
     const selectedGolonganData = dataGolongan.find(
-      (golongan) => golongan.nama === selectedValue
+      (golongan) => golongan.golongan === selectedValue
     );
-    setTagihan(selectedGolonganData ? selectedGolonganData.jumlah : "");
+    setTagihan(selectedGolonganData ? selectedGolonganData.spp : "");
+    setForm({
+      ...form,
+      golonganId: selectedGolonganData ? selectedGolonganData.id : "",
+    });
+  };
+
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    let errorMsg = "";
+
+    if (
+      (name === "nis" || name === "noHp" || name === "noHpOrtu") &&
+      !/^\d*$/.test(value)
+    ) {
+      errorMsg = "Input harus berupa angka.";
+    }
+
+    if (!errorMsg) {
+      setForm({...form, [name]: value});
+    }
+    setErrors({...errors, [name]: errorMsg});
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addSiswa(form));
+    navigate(`/dashboard/${username}/daftarsiswa`);
   };
 
   return (
     <div className="ms-5">
       <h1 className="text-2xl font-semibold">Register Siswa</h1>
       <div className="mt-5">
-        <form class=" mx-auto">
+        <form onSubmit={handleSubmit} className="mx-auto">
           <div className="grid grid-cols-2 gap-6 space-x-6">
             <div className="">
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.nama}
                   type="text"
-                  name="namasiswa"
+                  name="nama"
                   id="namasiswa"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="namasiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="namasiswa"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nama Siswa
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.nis}
                   type="text"
                   name="nis"
                   id="nis"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nis"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="nis"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nomor Induk Siswa (NIS)
                 </label>
+                {errors.nis && (
+                  <span className="text-red-600 text-xs">{errors.nis}</span>
+                )}
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.email}
                   type="email"
                   name="email"
                   id="email"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="email"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="email"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Email Siswa
                 </label>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.noHp}
                   type="text"
-                  name="nohpsiswa"
+                  name="noHp"
                   id="nohpsiswa"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nohpsiswa"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="nohpsiswa"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nomor HP Siswa
                 </label>
+                {errors.noHp && (
+                  <span className="text-red-600 text-xs">{errors.noHp}</span>
+                )}
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.noHpOrtu}
                   type="text"
-                  name="nohportu"
+                  name="noHpOrtu"
                   id="nohportu"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="nohportu"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="nohportu"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nomor HP Orang Tua
                 </label>
+                {errors.noHpOrtu && (
+                  <span className="text-red-600 text-xs">{errors.noHpOrtu}</span>
+                )}
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div className="relative z-0 w-full mb-5 group">
                 <input
+                  onChange={handleChange}
+                  value={form.alamat}
                   type="text"
                   name="alamat"
                   id="alamat"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="alamat"
-                  class="peer-focus:font-medium absolute text-sm text-gray-600  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                  htmlFor="alamat"
+                  className="peer-focus:font-medium absolute text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Alamat
                 </label>
               </div>
@@ -124,56 +191,61 @@ export default function RegisterSiswa() {
               <h3 className="text-lg font-semibold">Uang Pembayaran</h3>
               <div className="">
                 <label
-                  for="golongan"
-                  className="block mb-2 text-sm font-medium text-gray-90">
-                  Pilih Golongan
+                  htmlFor="golongan"
+                  className="block mb-2 text-sm font-medium text-gray-900">
+                  Golongan
                 </label>
                 <select
                   id="golongan"
                   value={selectedGolongan}
                   onChange={handleGolonganChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
-                  <option value="">Pilih Golongan</option>
-                  {dataGolongan.map((golongan) => (
-                    <option key={golongan.id} value={golongan.nama}>
-                      {golongan.nama}
-                    </option>
-                  ))}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5">
+                  <option value="" disabled>
+                    Pilih golongan
+                  </option>
+                  {dataGolongan &&
+                    dataGolongan.map((golongan) => (
+                      <option key={golongan.id} value={golongan.golongan}>
+                        {golongan.golongan}
+                      </option>
+                    ))}
                 </select>
               </div>
-              <div>
+              <div className="">
                 <label
                   htmlFor="tagihan"
-                  className="block mb-2 text-sm font-medium text-gray-900 ">
+                  className="block mb-2 text-sm font-medium text-gray-900">
                   Tagihan
                 </label>
                 <input
                   type="text"
                   id="tagihan"
-                  value={tagihan}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 "
-                  disabled
+                  value={numberFormatter.format(tagihan)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
+                  readOnly
                 />
               </div>
-              <div>
+               <div>
                 <label
-                  for="first_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  htmlFor="first_name"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Status Pembayaran
                 </label>
                 <select
                   id="status_pembayaran"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 ">
-                  <option selected>Belum Bayar</option>
-                  <option value="Lunas">Lunas</option>
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 "
+                >
+                  <option defaultValue="BELUM_LUNAS">Belum Lunas</option>
+                  <option value="LUNAS">Lunas</option>
                 </select>
               </div>
             </div>
           </div>
           <button
             type="submit"
-            className="text-white bg-primary hover:bg-green-600 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-            Submit
+            className="mt-5 text-white bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-light font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            Register
           </button>
         </form>
       </div>

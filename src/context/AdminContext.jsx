@@ -35,6 +35,7 @@ export const SekolahProvider = ({children}) => {
      try {
        const response = await axiosInstance.get("/sekolah");
        setSekolahList(response.data.data);
+       console.log("ini dari respons api",response.data);
        setStatus("succeeded");
      } catch (err) {
        setError(err.message);
@@ -56,13 +57,10 @@ export const SekolahProvider = ({children}) => {
          noHp: formData.noHp,
        });
        form.append("sekolah_request", sekolahRequest);
-1
-       console.log("sekolah_request yang akan dikirim:", sekolahRequest);
 
        // Tambahkan file logo
        if (formData.logo) {
          form.append("logo", formData.logo);
-         console.log("Logo yang akan dikirim:", formData.logo);
        }
 
        // Kirim data
@@ -71,12 +69,9 @@ export const SekolahProvider = ({children}) => {
            "Content-Type": "multipart/form-data",
          },
        });
-
-       console.log("Respon dari server:", response.data);
        setSekolah(response.data);
        setStatus("succeeded");
      } catch (err) {
-       console.error("Kesalahan saat mengirim data:", err.message);
        setError(err.message);
        setStatus("failed");
      }

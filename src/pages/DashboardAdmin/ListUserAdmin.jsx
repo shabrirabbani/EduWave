@@ -63,8 +63,6 @@ export default function ListUserAdmin() {
       formData.append("logo", updatedData.logo);
     }
 
-    console.log("FormData:", formData);
-
     updateSekolah(formData);
     setIsModalOpen(false);
     setSelectedItem(null);
@@ -77,6 +75,7 @@ export default function ListUserAdmin() {
 
   return (
     <div>
+      {console.log(sekolahList)}
       <div className="flex justify-between items-center mb-5 mx-2">
         <h1 className="text-lg font-semibold">List Sekolah</h1>
       </div>
@@ -106,32 +105,40 @@ export default function ListUserAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {sekolahList.map((sekolah) => (
-                  <tr
-                    key={sekolah.id}
-                    className="bg-white border-b dark:bg-gray-800">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                      {sekolah.sekolah}
-                    </th>
-                    <td className="px-6 py-4">{sekolah.npsn}</td>
-                    <td className="px-6 py-4">{sekolah.email}</td>
-                    <td className="px-6 py-4">{sekolah.no_hp}</td>
-                    <td className="px-6 py-4 flex justify-center">
-                      <button
-                        className="bg-blue-500 p-2 rounded-lg text-white me-2"
-                        onClick={() => handleOpenModal(sekolah)}>
-                        <IconEdit size={17} />
-                      </button>
-                      <button
-                        className="bg-red-500 p-2 rounded-lg text-white"
-                        onClick={() => handleDelete(sekolah.id)}>
-                        <IconTrash size={17} />
-                      </button>
+                {sekolahList.length === 0 ? (
+                  <tr className="bg-white border-b text-center">
+                    <td colSpan="8" className="py-4">
+                      Data tidak ada
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  sekolahList.map((sekolah) => (
+                    <tr
+                      key={sekolah.id}
+                      className="bg-white border-b dark:bg-gray-800">
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {sekolah.sekolah}
+                      </th>
+                      <td className="px-6 py-4">{sekolah.npsn}</td>
+                      <td className="px-6 py-4">{sekolah.email}</td>
+                      <td className="px-6 py-4">{sekolah.no_hp}</td>
+                      <td className="px-6 py-4 flex justify-center">
+                        <button
+                          className="bg-blue-500 p-2 rounded-lg text-white me-2"
+                          onClick={() => handleOpenModal(sekolah)}>
+                          <IconEdit size={17} />
+                        </button>
+                        <button
+                          className="bg-red-500 p-2 rounded-lg text-white"
+                          onClick={() => handleDelete(sekolah.id)}>
+                          <IconTrash size={17} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           )}

@@ -1,29 +1,89 @@
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import {IconSearch} from "@tabler/icons-react";
-
-const schools = [
-  {value: "sma26", label: "SMA NEGERI 26 JAKARTA"},
-    {value: "sma27", label: "SMA NEGERI 27 JAKARTA"},
-    {value: "sma28", label: "SMA NEGERI 28 JAKARTA"},
-    {value: "sma29", label: "SMA NEGERI 29 JAKARTA"},
-    {value: "sma30", label: "SMA NEGERI 30 JAKARTA"},
-  // Tambahkan lebih banyak opsi di sini
-];
-
+import {useDispatch, useSelector} from "react-redux";
+import {
+  fetchAllSekolahList,
+  fetchSiswaForTrx,
+  createTransaction,
+} from "../../../redux/features/transactionSlice";
+import ModalInfoSiswa from "./ModalInfoSiswa";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function InputPembayaran() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedSchool, setSelectedSchool] = useState(null);
+  const dispatch = useDispatch();
+  const schools = useSelector((state) => state.transaction.list) || [];
+  const siswa = useSelector((state) => state.transaction.siswa) || null;
+  const payment = useSelector((state) => state.transaction.payment.pembayaran) || null;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [nis, setNis] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [jumlahBayar, setJumlahBayar] = useState("");
+  const [transactionCreated, setTransactionCreated] = useState(false);
+  const navigate = useNavigate();
 
-    const filteredSchools = schools.filter((school) =>
-      school.label.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  useEffect(() => {
+    dispatch(fetchAllSekolahList());
+  }, [dispatch]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (nis) {
+      dispatch(fetchSiswaForTrx(nis)).then(() => {
+        setShowModal(true);
+      });
+    }
+  };
+
+  const filteredSchools = Array.isArray(schools)
+    ? schools.filter((school) =>
+        school.sekolah.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+    
+const handleCreateTransaction = async () => {
+  if (selectedSchool && nis && jumlahBayar) {
+    const transactionData = {
+      sekolahId: selectedSchool.id,
+      nis: nis,
+      jumlahBayar: Number(jumlahBayar),
+    };
+      try {
+        await dispatch(createTransaction(transactionData));
+        setTransactionCreated(true);
+      } catch (error) {
+        Swal.fire("Gagal", "Terjadi kesalahan saat membuat transaksi", "error");
+      }
+  } 
+};
+
+useEffect(() => {
+  if (transactionCreated && payment?.token) {
+    window.snap.pay(payment.token, {
+      onSuccess: function () {
+        navigate("/pembayaran");
+      },
+      onPending: function () {
+        navigate("/pembayaran");
+      },
+      onError: function () {
+        navigate("/pembayaran");
+      },
+      onClose: function () {
+        navigate("/pembayaran");
+      },
+    });
+  }
+}, [transactionCreated, payment?.token, navigate]);
 
 
   return (
     <div className="pb-10">
-      <form className="grid grid-cols-1 md:grid-cols-2 p-10 md:p-0 gap-5">
+      <form
+        className="grid grid-cols-1 md:grid-cols-2 p-10 md:p-0 gap-5"
+        onSubmit={handleSearch}>
         <div className="relative w-full">
           <input
             type="text"
@@ -39,32 +99,36 @@ export default function InputPembayaran() {
               {filteredSchools.length > 0 ? (
                 filteredSchools.map((school) => (
                   <li
-                    key={school.value}
+                    key={school.id}
                     onClick={() => {
                       setSelectedSchool(school);
-                      setSearchTerm(school.label);
+                      setSearchTerm(school.sekolah);
                       setShowDropdown(false);
                     }}
                     className="p-2 hover:bg-gray-200 cursor-pointer">
-                    {school.label}
+                    {school.sekolah}
                   </li>
                 ))
               ) : (
-                <li className="p-2 text-gray-500 text-center">Tidak ditemukan</li>
+                <li className="p-2 text-gray-500 text-center">
+                  Tidak ditemukan
+                </li>
               )}
             </ul>
           )}
         </div>
         <div>
           <label
-            htmlFor="default-search"
+            htmlFor="nis-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only">
-            Search
+            Nomor Induk Siswa (NIS)
           </label>
           <div className="relative">
             <input
               type="search"
-              id="default-search"
+              id="nis-search"
+              value={nis}
+              onChange={(e) => setNis(e.target.value)}
               className="block w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 shadow-md focus:ring-2 focus:ring-primary focus:border-primary"
               placeholder="Masukkan Nomor Induk Siswa (NIS)"
               required
@@ -77,6 +141,16 @@ export default function InputPembayaran() {
           </div>
         </div>
       </form>
+      {showModal && siswa && (
+        <ModalInfoSiswa
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          data={siswa}
+          jumlahBayar={jumlahBayar}
+          setJumlahBayar={setJumlahBayar}
+          createTransaction={handleCreateTransaction}
+        />
+      )}
     </div>
   );
 }

@@ -32,9 +32,9 @@ export default function Golongan() {
   const handleSave = async (updatedData) => {
     try {
       if (mode === 'edit') {
-        await dispatch(updateGolongan(updatedData)).unwrap();
+        await dispatch(updateGolongan(updatedData));
       } else {
-        await dispatch(addGolongan(updatedData)).unwrap();
+        await dispatch(addGolongan(updatedData));
       }
       handleCloseModal();      
     } catch (error) {

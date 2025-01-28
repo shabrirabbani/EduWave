@@ -70,8 +70,6 @@ export default function ModalEdit({isOpen, onClose, selectedItem}) {
      logo: formData.logo,
    };
 
-   console.log("Data yang akan dikirim untuk update:", dataToSend);
-
    try {
      await updateSekolah(dataToSend);
      onClose();
